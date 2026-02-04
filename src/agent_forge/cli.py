@@ -37,16 +37,16 @@ def create(name: str, provider: str, agent_type: str, docker: bool):
     
     # Generate files
     files = [
-        ("__init__.py", "python_package"),
-        ("main.py", "main_py"),
-        ("agent.py", "agent_py"),
-        ("requirements.txt", "requirements_txt"),
-        (".env.example", "env_example"),
+        ("__init__.py", "__init__.py"),
+        ("main.py", "main.py"),
+        ("agent.py", "agent.py"),
+        ("requirements.txt", "requirements.txt"),
+        (".env.example", ".env.example"),
     ]
     
     if docker:
-        files.append(("Dockerfile", "dockerfile"))
-        files.append(("docker-compose.yml", "docker_compose_yml"))
+        files.append(("Dockerfile", "Dockerfile"))
+        files.append(("docker-compose.yml", "docker-compose.yml"))
     
     context = {
         "name": name,
@@ -56,7 +56,7 @@ def create(name: str, provider: str, agent_type: str, docker: bool):
     }
     
     for filename, template_name in files:
-        template = env.get_template(f"{template_name}.j2")
+        template = env.get_template(template_name)
         content = template.render(**context)
         
         filepath = target_dir / filename
@@ -69,7 +69,7 @@ def create(name: str, provider: str, agent_type: str, docker: bool):
     # Create tests directory
     (target_dir / "tests").mkdir(exist_ok=True)
     (target_dir / "tests" / "__init__.py").touch()
-    test_template = env.get_template("test_py.j2")
+    test_template = env.get_template("test_agent.py")
     (target_dir / "tests" / "test_agent.py").write_text(test_template.render(**context))
     
     click.echo(f"✅ Agent '{name}' forged at {target_dir}")
