@@ -38,7 +38,7 @@ class ChatResponse(BaseModel):
     response: str
     agent: str
 
-class {{ name.title().replace('_', '') }}Agent:
+class {{ class_name }}Agent:
     """AI Agent with {{ provider }} provider"""
     
     def __init__(self):

@@ -2,6 +2,11 @@
 name = "agent-forge"
 version = "0.1.0"
 description = "Scaffold, deploy, and manage AI agents with one command"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Arush Wadhawan" }
+]
 requires-python = ">=3.10"
 dependencies = [
     "click>=8.1.0",
@@ -14,8 +19,18 @@ dependencies = [
     "pyyaml>=6.0.0",
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+]
+
 [project.scripts]
 agent-forge = "agent_forge.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/SoulSniper-V2/agent-forge"
+Repository = "https://github.com/SoulSniper-V2/agent-forge"
+Issues = "https://github.com/SoulSniper-V2/agent-forge/issues"
 
 [tool.hatch]
 dependencies.paths = ["src/agent_forge"]

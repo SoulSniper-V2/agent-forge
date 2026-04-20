@@ -4,11 +4,18 @@ AgentForge CLI - Spawn AI agents in seconds, not hours.
 """
 import sys
 import os
+import re
 from pathlib import Path
 from datetime import datetime
 
 import click
 from jinja2 import Environment, FileSystemLoader
+
+
+def to_class_name(name: str) -> str:
+    """Convert an agent slug into a valid Python class name."""
+    parts = re.split(r"[^a-zA-Z0-9]+", name)
+    return "".join(part.capitalize() for part in parts if part) or "Agent"
 
 @click.group()
 def main():
@@ -42,6 +49,8 @@ def create(name: str, provider: str, agent_type: str, docker: bool):
         ("agent.py", "agent.py"),
         ("requirements.txt", "requirements.txt"),
         (".env.example", ".env.example"),
+        (".gitignore", ".gitignore"),
+        ("README.md", "README.md"),
     ]
     
     if docker:
@@ -53,6 +62,7 @@ def create(name: str, provider: str, agent_type: str, docker: bool):
         "provider": provider,
         "agent_type": agent_type,
         "timestamp": datetime.now().isoformat(),
+        "class_name": to_class_name(name),
     }
     
     for filename, template_name in files:

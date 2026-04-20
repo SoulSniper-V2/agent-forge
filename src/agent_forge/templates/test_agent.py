@@ -1,11 +1,13 @@
 """Tests for {{ name }}"""
 
 import pytest
-from agent import {{ name.title().replace('_', '') }}Agent
+from fastapi.testclient import TestClient
+
+from agent import {{ class_name }}Agent
 
 @pytest.fixture
 def agent():
-    return {{ name.title().replace('_', '') }}Agent()
+    return {{ class_name }}Agent()
 
 def test_agent_initializes(agent):
     """Test agent creates successfully"""
@@ -14,7 +16,7 @@ def test_agent_initializes(agent):
 
 def test_root_endpoint(agent):
     """Test root endpoint returns agent info"""
-    client = agent.app.test_client()
+    client = TestClient(agent.app)
     response = client.get("/")
     assert response.status_code == 200
     data = response.json()
@@ -23,7 +25,7 @@ def test_root_endpoint(agent):
 
 def test_health_endpoint(agent):
     """Test health endpoint"""
-    client = agent.app.test_client()
+    client = TestClient(agent.app)
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json()["status"] == "healthy"
@@ -31,7 +33,7 @@ def test_health_endpoint(agent):
 def test_clear_history(agent):
     """Test clearing history"""
     agent.conversation_history = [{"role": "user", "content": "test"}]
-    client = agent.app.test_client()
+    client = TestClient(agent.app)
     response = client.post("/clear")
     assert response.status_code == 200
     assert len(agent.conversation_history) == 0
